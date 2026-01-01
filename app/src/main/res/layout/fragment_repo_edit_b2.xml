@@ -8,7 +8,7 @@
     <androidx.constraintlayout.widget.Group
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="text_input_b2_uri, text_b2_account_id, text_input_b2_account_id, text_b2_account_key, text_input_b2_account_key"
+        app:constraint_referenced_ids="text_input_b2_uri, text_input_b2_account_id, text_input_b2_account_key"
         android:id="@+id/repo_edit_b2_group" />
 
     <com.google.android.material.textfield.TextInputLayout
