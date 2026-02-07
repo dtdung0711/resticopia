@@ -53,10 +53,13 @@ abstract class ResticRepo(
             format.decodeFromString<ResticStats>(json)
         }
 
-    fun snapshots(hostname: String? = null): CompletableFuture<List<ResticSnapshot>> =
+    fun snapshots(hostname: String? = null, latest: Int? = null): CompletableFuture<List<ResticSnapshot>> =
         restic(
             listOf("--json", "snapshots").plus(
                 if (hostname != null) listOf("--host", hostname)
+                else emptyList()
+            ).plus(
+                if (latest != null) listOf("--latest", latest.toString())
                 else emptyList()
             )
         ).thenApply { (out, _) ->

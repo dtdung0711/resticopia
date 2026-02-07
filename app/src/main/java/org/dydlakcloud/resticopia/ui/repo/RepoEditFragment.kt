@@ -240,7 +240,7 @@ class RepoEditFragment : Fragment() {
                     binding.progressRepoSave.visibility = VISIBLE
 
                     val resticRepo = repo!!.repo(backupManager.restic)
-                    resticRepo.stats().handle { _, throwable ->
+                    resticRepo.snapshots(latest = 1).handle { _, throwable ->
                         requireActivity().runOnUiThread {
                             if (throwable == null) {
                                 saveRepo()
