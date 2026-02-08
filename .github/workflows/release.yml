@@ -16,12 +16,17 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
           cache: 'gradle'
+      
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+      
+      - name: Accept Android SDK licenses
+        run: yes | sdkmanager --licenses || true
+      
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Keystore
         run: echo "${{ secrets.RELEASE_STORE_BASE64}}" | base64 -d > keystore.jks
-      - name: Download Binaries
-        run: ./download-binaries.sh
       - name: Build with Gradle
         env:
           CI_VERSION: ${{ github.ref }}
