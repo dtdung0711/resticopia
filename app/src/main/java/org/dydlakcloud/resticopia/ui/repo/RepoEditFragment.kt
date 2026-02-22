@@ -143,6 +143,18 @@ class RepoEditFragment : Fragment() {
         binding.editRepoLocalParameters.textInputLocalPath.setEndIconOnClickListener {
             directoryChooser.openDialog()
         }
+
+        // Setup webhook section expand/collapse
+        binding.webhookSectionHeader.setOnClickListener {
+            val isExpanded = binding.webhookSectionContent.visibility == android.view.View.VISIBLE
+            if (isExpanded) {
+                binding.webhookSectionContent.visibility = android.view.View.GONE
+                binding.webhookExpandIcon.setImageResource(R.drawable.ic_expand_more)
+            } else {
+                binding.webhookSectionContent.visibility = android.view.View.VISIBLE
+                binding.webhookExpandIcon.setImageResource(R.drawable.ic_expand_less)
+            }
+        }
         
         // Load rclone remotes from global config
         loadRcloneRemotes()
