@@ -53,7 +53,11 @@ data class RepoBaseConfig(
     val id: RepoConfigId,
     val name: String,
     val type: RepoType,
-    val password: Secret
+    val password: Secret,
+    val webhookUrl: String? = null,
+    val webhookOnSuccess: Boolean = false,
+    val webhookOnFailure: Boolean = false,
+    val webhookHeaders: Map<String, String>? = null
 ) {
     companion object {
         fun create(

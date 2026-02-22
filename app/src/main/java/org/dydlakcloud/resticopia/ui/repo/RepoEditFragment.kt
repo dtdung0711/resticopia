@@ -126,6 +126,12 @@ class RepoEditFragment : Fragment() {
                 }
 
             }.apply {} // do not remove - throws a compiler error if any of the repo types cases is not covered by the when
+
+            // Load webhook configuration
+            binding.editWebhookUrl.setText(repo.base.webhookUrl)
+            binding.checkboxWebhookOnSuccess.isChecked = repo.base.webhookOnSuccess
+            binding.checkboxWebhookOnFailure.isChecked = repo.base.webhookOnFailure
+            binding.editWebhookHeaders.setText(repo.base.webhookHeaders?.entries?.joinToString(", ") { "${it.key}: ${it.value}" })
         }
 
         // Setup directory chooser for local repository
@@ -350,11 +356,26 @@ class RepoEditFragment : Fragment() {
             return false to null
         }
 
+        val webhookUrl = binding.editWebhookUrl.text.toString().ifBlank { null }
+        val webhookOnSuccess = binding.checkboxWebhookOnSuccess.isChecked
+        val webhookOnFailure = binding.checkboxWebhookOnFailure.isChecked
+        val webhookHeadersText = binding.editWebhookHeaders.text.toString().ifBlank { null }
+        val webhookHeaders = webhookHeadersText?.let { headersText ->
+            headersText.split(",").mapNotNull { entry ->
+                val parts = entry.split(":", limit = 2)
+                if (parts.size == 2) parts[0].trim() to parts[1].trim() else null
+            }.toMap()
+        }
+
         val baseConfig = RepoBaseConfig(
             id = repoId,
             name = binding.editRepoName.text.toString(),
             type = repoType,
-            password = Secret(binding.editRepoPassword.text.toString())
+            password = Secret(binding.editRepoPassword.text.toString()),
+            webhookUrl = webhookUrl,
+            webhookOnSuccess = webhookOnSuccess,
+            webhookOnFailure = webhookOnFailure,
+            webhookHeaders = webhookHeaders
         )
 
         return true to when (repoType) {
