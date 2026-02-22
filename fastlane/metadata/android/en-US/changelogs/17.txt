@@ -1,0 +1,4 @@
+Version 0.8.2
+
+- Fix problem with loading too many snapshots loaded when creating a repo
+- Migrate some components to Material 3

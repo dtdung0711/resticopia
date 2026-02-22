@@ -1,0 +1,4 @@
+Wersja 0.8.2
+
+- Naprawiono problem z ładowaniem zbyt dużej liczby migawek podczas tworzenia repozytorium.
+- Przeniesiono niektóre komponenty do Material 3.
