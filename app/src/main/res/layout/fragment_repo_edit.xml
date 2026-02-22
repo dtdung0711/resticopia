@@ -76,65 +76,60 @@
                 android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <include
-            android:id="@+id/edit_repo_s3_parameters"
-            layout="@layout/fragment_repo_edit_s3"
+        <LinearLayout
+            android:id="@+id/repo_parameters_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:visibility="gone"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_input_repo_type"
-            tools:visibility="gone" />
+            app:layout_constraintTop_toBottomOf="@+id/text_input_repo_type">
 
-        <include
-            android:id="@+id/edit_repo_rest_parameters"
-            layout="@layout/fragment_repo_edit_rest"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_input_repo_type"
-            tools:visibility="gone" />
+            <include
+                android:id="@+id/edit_repo_s3_parameters"
+                layout="@layout/fragment_repo_edit_s3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                tools:visibility="gone" />
 
-        <include
-            android:id="@+id/edit_repo_b2_parameters"
-            layout="@layout/fragment_repo_edit_b2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_input_repo_type"
-            tools:visibility="gone" />
+            <include
+                android:id="@+id/edit_repo_rest_parameters"
+                layout="@layout/fragment_repo_edit_rest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                tools:visibility="gone" />
 
-        <include
-            android:id="@+id/edit_repo_local_parameters"
-            layout="@layout/fragment_repo_edit_local"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_input_repo_type"
-            tools:visibility="gone" />
+            <include
+                android:id="@+id/edit_repo_b2_parameters"
+                layout="@layout/fragment_repo_edit_b2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                tools:visibility="gone" />
 
-        <include
-            android:id="@+id/edit_repo_rclone_parameters"
-            layout="@layout/fragment_repo_edit_rclone"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_input_repo_type"
-            tools:visibility="gone" />
+            <include
+                android:id="@+id/edit_repo_local_parameters"
+                layout="@layout/fragment_repo_edit_local"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                tools:visibility="gone" />
+
+            <include
+                android:id="@+id/edit_repo_rclone_parameters"
+                layout="@layout/fragment_repo_edit_rclone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                tools:visibility="gone" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/webhook_section_header"
@@ -150,7 +145,7 @@
             android:background="?attr/selectableItemBackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_repo_rclone_parameters">
+            app:layout_constraintTop_toBottomOf="@+id/repo_parameters_container">
 
             <TextView
                 android:id="@+id/text_webhook_section"
