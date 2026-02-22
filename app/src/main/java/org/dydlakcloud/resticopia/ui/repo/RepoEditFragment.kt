@@ -525,7 +525,20 @@ class RepoEditFragment : Fragment() {
             }
         }
 
-        return validatorResults.all { result -> result }
+        val webhookUrl = binding.editWebhookUrl.text.toString()
+        val webhookValidation = if (webhookUrl.isNotBlank()) {
+            if (!webhookUrl.startsWith("http://", ignoreCase = true) && 
+                !webhookUrl.startsWith("https://", ignoreCase = true)) {
+                binding.editWebhookUrl.error = getString(R.string.webhook_url_error_protocol)
+                false
+            } else {
+                true
+            }
+        } else {
+            true
+        }
+
+        return validatorResults.all { result -> result } && webhookValidation
     }
 
     override fun onResume() {
