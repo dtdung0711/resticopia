@@ -131,7 +131,7 @@ class RepoEditFragment : Fragment() {
             binding.editWebhookUrl.setText(repo.base.webhookUrl)
             binding.checkboxWebhookOnSuccess.isChecked = repo.base.webhookOnSuccess
             binding.checkboxWebhookOnFailure.isChecked = repo.base.webhookOnFailure
-            binding.editWebhookHeaders.setText(repo.base.webhookHeaders?.entries?.joinToString(", ") { "${it.key}: ${it.value}" })
+            binding.editWebhookHeaders.setText(repo.base.webhookBearerToken)
         }
 
         // Setup directory chooser for local repository
@@ -359,13 +359,7 @@ class RepoEditFragment : Fragment() {
         val webhookUrl = binding.editWebhookUrl.text.toString().ifBlank { null }
         val webhookOnSuccess = binding.checkboxWebhookOnSuccess.isChecked
         val webhookOnFailure = binding.checkboxWebhookOnFailure.isChecked
-        val webhookHeadersText = binding.editWebhookHeaders.text.toString().ifBlank { null }
-        val webhookHeaders = webhookHeadersText?.let { headersText ->
-            headersText.split(",").mapNotNull { entry ->
-                val parts = entry.split(":", limit = 2)
-                if (parts.size == 2) parts[0].trim() to parts[1].trim() else null
-            }.toMap()
-        }
+        val webhookBearerToken = binding.editWebhookHeaders.text.toString().ifBlank { null }
 
         val baseConfig = RepoBaseConfig(
             id = repoId,
@@ -375,7 +369,7 @@ class RepoEditFragment : Fragment() {
             webhookUrl = webhookUrl,
             webhookOnSuccess = webhookOnSuccess,
             webhookOnFailure = webhookOnFailure,
-            webhookHeaders = webhookHeaders
+            webhookBearerToken = webhookBearerToken
         )
 
         return true to when (repoType) {

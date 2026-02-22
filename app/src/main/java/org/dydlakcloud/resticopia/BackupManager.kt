@@ -332,7 +332,7 @@ class BackupManager private constructor(context: Context) {
                     hostname = config.hostname,
                     folderPath = folder.path.absolutePath,
                     errorMessage = errorMessage,
-                    headers = webhookConfig.webhookHeaders
+                    bearerToken = webhookConfig.webhookBearerToken
                 )
             }
 

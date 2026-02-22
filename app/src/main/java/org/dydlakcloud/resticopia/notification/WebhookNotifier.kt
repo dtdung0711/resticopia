@@ -17,7 +17,7 @@ object WebhookNotifier {
         hostname: String?,
         folderPath: String,
         errorMessage: String? = null,
-        headers: Map<String, String>? = null
+        bearerToken: String? = null
     ): CompletableFuture<Unit> {
         return CompletableFuture.supplyAsync {
             if (webhookUrl.isNullOrBlank()) {
@@ -40,8 +40,8 @@ object WebhookNotifier {
                     connection.readTimeout = 10000
                     connection.setRequestProperty("Content-Type", "text/plain; charset=utf-8")
 
-                    headers?.forEach { (key, value) ->
-                        connection.setRequestProperty(key, value)
+                    if (!bearerToken.isNullOrBlank()) {
+                        connection.setRequestProperty("Authorization", "Bearer $bearerToken")
                     }
 
                     val device = hostname ?: "Unknown Device"
