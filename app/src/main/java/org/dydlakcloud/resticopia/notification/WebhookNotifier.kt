@@ -17,6 +17,7 @@ object WebhookNotifier {
         isSuccess: Boolean,
         hostname: String?,
         folderPath: String,
+        folderName: String,
         errorMessage: String? = null,
         bearerToken: String? = null,
         duration: Duration? = null
@@ -64,7 +65,8 @@ object WebhookNotifier {
                         append("\"error\":${errorString?.let { "\"${it.replace("\"", "\\\"")}\"" } ?: "null"},")
                         append("\"duration\":${durationString?.let { "\"$it\"" } ?: "null"},")
                         append("\"device\":\"${device.replace("\"", "\\\"")}\",")
-                        append("\"folder\":\"${folderPath.replace("\"", "\\\"")}\"")
+                        append("\"folderName\":\"${folderName.replace("\"", "\\\"")}\",")
+                        append("\"folderPath\":\"${folderPath.replace("\"", "\\\"")}\"")
                         append("}")
                     }
 

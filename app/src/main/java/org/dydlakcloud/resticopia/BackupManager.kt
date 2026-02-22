@@ -334,6 +334,7 @@ class BackupManager private constructor(context: Context) {
                     isSuccess = isSuccess,
                     hostname = config.hostname,
                     folderPath = folder.path.absolutePath,
+                    folderName = folder.path.name,
                     errorMessage = errorMessage,
                     bearerToken = webhookConfig.webhookBearerToken,
                     duration = duration
