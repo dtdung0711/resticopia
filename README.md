@@ -39,6 +39,7 @@ This is an **unofficial** application and is not developed or endorsed by the of
 - Retention Policies: Define cleanup rules for individual folders
 - Live Progress: Monitor backup operations through system notifications
 - Rclone Integration: Access 40+ cloud storage providers via Rclone backend
+- Webhook Notifications: Monitor backup status via HTTP webhooks (supports Gatus, and more) ([docs](docs/webhook.md))
 
 ## Donate
 
