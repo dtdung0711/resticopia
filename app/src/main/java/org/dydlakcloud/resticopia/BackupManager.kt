@@ -324,6 +324,9 @@ class BackupManager private constructor(context: Context) {
             val webhookConfig = repo?.base
             if (!cancelled && webhookConfig != null) {
                 val isSuccess = errorMessage == null && summary != null
+                val duration = Duration.ofMillis(
+                    afterBackup.toInstant().toEpochMilli() - beforeBackup.toInstant().toEpochMilli()
+                )
                 WebhookNotifier.sendWebhook(
                     webhookUrl = webhookConfig.webhookUrl,
                     onSuccess = webhookConfig.webhookOnSuccess,
@@ -332,7 +335,8 @@ class BackupManager private constructor(context: Context) {
                     hostname = config.hostname,
                     folderPath = folder.path.absolutePath,
                     errorMessage = errorMessage,
-                    bearerToken = webhookConfig.webhookBearerToken
+                    bearerToken = webhookConfig.webhookBearerToken,
+                    duration = duration
                 )
             }
 

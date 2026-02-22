@@ -6,6 +6,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.CompletableFuture
+import java.time.Duration
 
 object WebhookNotifier {
 
@@ -17,7 +18,8 @@ object WebhookNotifier {
         hostname: String?,
         folderPath: String,
         errorMessage: String? = null,
-        bearerToken: String? = null
+        bearerToken: String? = null,
+        duration: Duration? = null
     ): CompletableFuture<Unit> {
         return CompletableFuture.supplyAsync {
             if (webhookUrl.isNullOrBlank()) {
@@ -29,8 +31,18 @@ object WebhookNotifier {
                 return@supplyAsync
             }
 
+            val durationString = duration?.let { "${it.seconds}s" }
+            val errorString = if (!isSuccess) errorMessage else null
+
+                    val processedUrl = webhookUrl.trim()
+                .replace("{success}", isSuccess.toString())
+                .replace("{error}", errorString ?: "")
+                .replace("{duration}", durationString ?: "")
+
+            println("WebhookNotifier: Sending to URL: $processedUrl")
+
             try {
-                val url = URL(webhookUrl.trim())
+                val url = URL(processedUrl)
                 val connection = url.openConnection() as HttpURLConnection
 
                 try {
@@ -38,22 +50,27 @@ object WebhookNotifier {
                     connection.doOutput = true
                     connection.connectTimeout = 10000
                     connection.readTimeout = 10000
-                    connection.setRequestProperty("Content-Type", "text/plain; charset=utf-8")
+                    connection.setRequestProperty("Content-Type", "application/json; charset=utf-8")
 
                     if (!bearerToken.isNullOrBlank()) {
                         connection.setRequestProperty("Authorization", "Bearer $bearerToken")
                     }
 
                     val device = hostname ?: "Unknown Device"
-                    val message = if (isSuccess) {
-                        "Backup successful: $folderPath ($device)"
-                    } else {
-                        "Backup failed: $folderPath ($device)\nError: $errorMessage"
+
+                    val jsonBody = buildString {
+                        append("{")
+                        append("\"success\":$isSuccess,")
+                        append("\"error\":${errorString?.let { "\"${it.replace("\"", "\\\"")}\"" } ?: "null"},")
+                        append("\"duration\":${durationString?.let { "\"$it\"" } ?: "null"},")
+                        append("\"device\":\"${device.replace("\"", "\\\"")}\",")
+                        append("\"folder\":\"${folderPath.replace("\"", "\\\"")}\"")
+                        append("}")
                     }
 
                     BufferedOutputStream(connection.outputStream).use { outputStream ->
                         OutputStreamWriter(outputStream, StandardCharsets.UTF_8).use { writer ->
-                            writer.write(message)
+                            writer.write(jsonBody)
                             writer.flush()
                         }
                     }
