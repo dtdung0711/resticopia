@@ -76,65 +76,156 @@
                 android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <include
-            android:id="@+id/edit_repo_s3_parameters"
-            layout="@layout/fragment_repo_edit_s3"
+        <LinearLayout
+            android:id="@+id/repo_parameters_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:visibility="gone"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_input_repo_type"
-            tools:visibility="gone" />
+            app:layout_constraintTop_toBottomOf="@+id/text_input_repo_type">
 
-        <include
-            android:id="@+id/edit_repo_rest_parameters"
-            layout="@layout/fragment_repo_edit_rest"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_input_repo_type"
-            tools:visibility="gone" />
+            <include
+                android:id="@+id/edit_repo_s3_parameters"
+                layout="@layout/fragment_repo_edit_s3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                tools:visibility="gone" />
 
-        <include
-            android:id="@+id/edit_repo_b2_parameters"
-            layout="@layout/fragment_repo_edit_b2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_input_repo_type"
-            tools:visibility="gone" />
+            <include
+                android:id="@+id/edit_repo_rest_parameters"
+                layout="@layout/fragment_repo_edit_rest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                tools:visibility="gone" />
 
-        <include
-            android:id="@+id/edit_repo_local_parameters"
-            layout="@layout/fragment_repo_edit_local"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_input_repo_type"
-            tools:visibility="gone" />
+            <include
+                android:id="@+id/edit_repo_b2_parameters"
+                layout="@layout/fragment_repo_edit_b2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                tools:visibility="gone" />
 
-        <include
-            android:id="@+id/edit_repo_rclone_parameters"
-            layout="@layout/fragment_repo_edit_rclone"
+            <include
+                android:id="@+id/edit_repo_local_parameters"
+                layout="@layout/fragment_repo_edit_local"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                tools:visibility="gone" />
+
+            <include
+                android:id="@+id/edit_repo_rclone_parameters"
+                layout="@layout/fragment_repo_edit_rclone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                tools:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/webhook_section_header"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/repo_parameters_container">
+
+            <TextView
+                android:id="@+id/text_webhook_section"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/webhook_section_title"
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+            <ImageView
+                android:id="@+id/webhook_expand_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_expand_more"
+                android:contentDescription="@string/expand_collapse" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/webhook_section_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_input_repo_type"
-            tools:visibility="gone" />
+            app:layout_constraintTop_toBottomOf="@+id/webhook_section_header">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/text_input_webhook_url"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_webhook_url"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/webhook_url_hint"
+                    android:inputType="textUri" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/checkbox_webhook_on_success"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/webhook_on_success" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/checkbox_webhook_on_failure"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/webhook_on_failure" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/text_input_webhook_headers"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_webhook_headers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/webhook_headers_hint"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
         <ProgressBar
             android:id="@+id/progress_repo_save"

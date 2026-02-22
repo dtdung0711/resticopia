@@ -9,6 +9,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import org.dydlakcloud.resticopia.config.*
 import org.dydlakcloud.resticopia.notification.NtfyNotifier
+import org.dydlakcloud.resticopia.notification.WebhookNotifier
 import org.dydlakcloud.resticopia.restic.Restic
 import org.dydlakcloud.resticopia.restic.ResticException
 import org.dydlakcloud.resticopia.restic.ResticNameServers
@@ -316,6 +317,28 @@ class BackupManager private constructor(context: Context) {
                 } else if (summary != null) {
                     NtfyNotifier.sendBackupSuccessNotification(ntfyUrl, config.hostname, folder.path.absolutePath)
                 }
+            }
+
+            // Send webhook notification
+            val repo = folder.repo(config)
+            val webhookConfig = repo?.base
+            if (!cancelled && webhookConfig != null) {
+                val isSuccess = errorMessage == null && summary != null
+                val duration = Duration.ofMillis(
+                    afterBackup.toInstant().toEpochMilli() - beforeBackup.toInstant().toEpochMilli()
+                )
+                WebhookNotifier.sendWebhook(
+                    webhookUrl = webhookConfig.webhookUrl,
+                    onSuccess = webhookConfig.webhookOnSuccess,
+                    onFailure = webhookConfig.webhookOnFailure,
+                    isSuccess = isSuccess,
+                    hostname = config.hostname,
+                    folderPath = folder.path.absolutePath,
+                    folderName = folder.path.name,
+                    errorMessage = errorMessage,
+                    bearerToken = webhookConfig.webhookBearerToken,
+                    duration = duration
+                )
             }
 
             fun removeOldBackups(callback: () -> Unit) {

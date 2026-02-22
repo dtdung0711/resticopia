@@ -88,7 +88,11 @@ data class PortableConfig(
                             rclonePath = repo.params.rclonePath
                         )
                         else -> throw IllegalArgumentException("Unknown repo type: ${repo.params::class.simpleName}")
-                    }
+                    },
+                    webhookUrl = repo.base.webhookUrl,
+                    webhookOnSuccess = repo.base.webhookOnSuccess,
+                    webhookOnFailure = repo.base.webhookOnFailure,
+                    webhookBearerToken = repo.base.webhookBearerToken
                 )
             }
 
@@ -165,7 +169,11 @@ data class PortableConfig(
                 id = RepoConfigId.fromString(portableRepo.id),
                 name = portableRepo.name,
                 type = repoType,
-                password = Secret(portableRepo.password)
+                password = Secret(portableRepo.password),
+                webhookUrl = portableRepo.webhookUrl,
+                webhookOnSuccess = portableRepo.webhookOnSuccess,
+                webhookOnFailure = portableRepo.webhookOnFailure,
+                webhookBearerToken = portableRepo.webhookBearerToken
             )
 
             RepoConfig(baseConfig, params)
@@ -277,8 +285,12 @@ data class PortableRepoConfig(
     val id: String,
     val name: String,
     val type: String,
-    val password: String, // Plain text password
-    val params: PortableRepoParams
+    val password: String,
+    val params: PortableRepoParams,
+    val webhookUrl: String? = null,
+    val webhookOnSuccess: Boolean = false,
+    val webhookOnFailure: Boolean = false,
+    val webhookBearerToken: String? = null
 )
 
 @Serializable

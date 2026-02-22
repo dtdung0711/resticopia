@@ -126,6 +126,12 @@ class RepoEditFragment : Fragment() {
                 }
 
             }.apply {} // do not remove - throws a compiler error if any of the repo types cases is not covered by the when
+
+            // Load webhook configuration
+            binding.editWebhookUrl.setText(repo.base.webhookUrl)
+            binding.checkboxWebhookOnSuccess.isChecked = repo.base.webhookOnSuccess
+            binding.checkboxWebhookOnFailure.isChecked = repo.base.webhookOnFailure
+            binding.editWebhookHeaders.setText(repo.base.webhookBearerToken)
         }
 
         // Setup directory chooser for local repository
@@ -136,6 +142,18 @@ class RepoEditFragment : Fragment() {
         // Setup browse end icon click listener
         binding.editRepoLocalParameters.textInputLocalPath.setEndIconOnClickListener {
             directoryChooser.openDialog()
+        }
+
+        // Setup webhook section expand/collapse
+        binding.webhookSectionHeader.setOnClickListener {
+            val isExpanded = binding.webhookSectionContent.visibility == android.view.View.VISIBLE
+            if (isExpanded) {
+                binding.webhookSectionContent.visibility = android.view.View.GONE
+                binding.webhookExpandIcon.setImageResource(R.drawable.ic_expand_more)
+            } else {
+                binding.webhookSectionContent.visibility = android.view.View.VISIBLE
+                binding.webhookExpandIcon.setImageResource(R.drawable.ic_expand_less)
+            }
         }
         
         // Load rclone remotes from global config
@@ -350,11 +368,20 @@ class RepoEditFragment : Fragment() {
             return false to null
         }
 
+        val webhookUrl = binding.editWebhookUrl.text.toString().ifBlank { null }
+        val webhookOnSuccess = binding.checkboxWebhookOnSuccess.isChecked
+        val webhookOnFailure = binding.checkboxWebhookOnFailure.isChecked
+        val webhookBearerToken = binding.editWebhookHeaders.text.toString().ifBlank { null }
+
         val baseConfig = RepoBaseConfig(
             id = repoId,
             name = binding.editRepoName.text.toString(),
             type = repoType,
-            password = Secret(binding.editRepoPassword.text.toString())
+            password = Secret(binding.editRepoPassword.text.toString()),
+            webhookUrl = webhookUrl,
+            webhookOnSuccess = webhookOnSuccess,
+            webhookOnFailure = webhookOnFailure,
+            webhookBearerToken = webhookBearerToken
         )
 
         return true to when (repoType) {
@@ -498,7 +525,20 @@ class RepoEditFragment : Fragment() {
             }
         }
 
-        return validatorResults.all { result -> result }
+        val webhookUrl = binding.editWebhookUrl.text.toString()
+        val webhookValidation = if (webhookUrl.isNotBlank()) {
+            if (!webhookUrl.startsWith("http://", ignoreCase = true) && 
+                !webhookUrl.startsWith("https://", ignoreCase = true)) {
+                binding.editWebhookUrl.error = getString(R.string.webhook_url_error_protocol)
+                false
+            } else {
+                true
+            }
+        } else {
+            true
+        }
+
+        return validatorResults.all { result -> result } && webhookValidation
     }
 
     override fun onResume() {
