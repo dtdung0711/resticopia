@@ -1,12 +1,11 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.8.22'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.24'
 }
 
 android {
     compileSdkVersion 34
-    buildToolsVersion "33.0.1"
     defaultConfig {
         applicationId "org.dydlakcloud.resticopia"
         minSdkVersion 24
@@ -79,6 +78,7 @@ android {
         }
     }
     buildFeatures {
+        buildConfig true
         viewBinding true
     }
     packagingOptions {
