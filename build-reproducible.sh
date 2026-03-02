@@ -42,17 +42,17 @@ echo "Using SOURCE_DATE_EPOCH: $SOURCE_DATE_EPOCH ($(date -r $SOURCE_DATE_EPOCH 
 # Ensure consistent timezone for reproducible builds
 export TZ=UTC
 
-# Set JAVA_HOME to JDK 17 (required for reproducible builds matching F-Droid)
-if [ -d "/opt/homebrew/opt/openjdk@17" ]; then
-    export JAVA_HOME="/opt/homebrew/opt/openjdk@17"
-elif [ -d "/usr/local/opt/openjdk@17" ]; then
-    export JAVA_HOME="/usr/local/opt/openjdk@17"
-elif [ -d "$HOME/.sdkman/candidates/java/17.0.12-tem" ]; then
-    export JAVA_HOME="$HOME/.sdkman/candidates/java/17.0.12-tem"
+# Set JAVA_HOME to JDK 21
+if [ -d "/opt/homebrew/opt/openjdk@21" ]; then
+    export JAVA_HOME="/opt/homebrew/opt/openjdk@21"
+elif [ -d "/usr/local/opt/openjdk@21" ]; then
+    export JAVA_HOME="/usr/local/opt/openjdk@21"
+elif [ -d "$HOME/.sdkman/candidates/java/21.0.6-tem" ]; then
+    export JAVA_HOME="$HOME/.sdkman/candidates/java/21.0.6-tem"
 else
-    echo "Error: JDK 17 not found!"
-    echo "F-Droid uses JDK 17 for builds. Please install it:"
-    echo "  brew install openjdk@17"
+    echo "Error: JDK 21 not found!"
+    echo "Please install it:"
+    echo "  brew install openjdk@21"
     echo ""
     echo "Your current Java version:"
     java -version
@@ -62,11 +62,11 @@ fi
 export PATH="$JAVA_HOME/bin:$PATH"
 echo "Using Java: $(java -version 2>&1 | head -n 1)"
 
-# Verify we're using JDK 17
+# Verify we're using JDK 21
 JAVA_VERSION=$(java -version 2>&1 | grep version | awk -F '"' '{print $2}' | cut -d'.' -f1)
-if [ "$JAVA_VERSION" != "17" ]; then
-    echo "Error: Java version $JAVA_VERSION detected, but JDK 17 is required"
-    echo "Please install JDK 17: brew install openjdk@17"
+if [ "$JAVA_VERSION" != "21" ]; then
+    echo "Error: Java version $JAVA_VERSION detected, but JDK 21 is required"
+    echo "Please install JDK 21: brew install openjdk@21"
     exit 1
 fi
 
@@ -104,23 +104,20 @@ cd app
 cp build.gradle build.gradle.orig
 # Only include arm64-v8a architecture
 sed -i.bak "s/include 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'/include 'arm64-v8a'/" build.gradle
-# Add buildToolsVersion explicitly to match what F-Droid uses
-# Insert after the line containing "compileSdkVersion"
-awk '/compileSdkVersion/ {print; print "    buildToolsVersion \"33.0.1\""; next} {print}' build.gradle > build.gradle.tmp && mv build.gradle.tmp build.gradle
 cd ..
 
-# Set build-tools version to match F-Droid (33.0.1)
+# Set build-tools version to match AGP 8.4.x defaults (34.0.0)
 echo ""
-echo "Ensuring Android SDK build-tools 33.0.1 is installed (matching F-Droid)..."
+echo "Ensuring Android SDK build-tools 34.0.0 is installed..."
 ANDROID_SDK_ROOT="${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
 ANDROID_SDK_ROOT="${ANDROID_SDK_ROOT:-$HOME/Library/Android/sdk}"
 
-if [ -d "$ANDROID_SDK_ROOT/build-tools/33.0.1" ]; then
-    echo "✓ build-tools 33.0.1 already installed"
+if [ -d "$ANDROID_SDK_ROOT/build-tools/34.0.0" ]; then
+    echo "✓ build-tools 34.0.0 already installed"
 else
-    echo "Warning: build-tools 33.0.1 not found"
+    echo "Warning: build-tools 34.0.0 not found"
     echo "Gradle will auto-download it, but it's better to install manually:"
-    echo "Or via Android Studio: Tools → SDK Manager → SDK Tools → Show Package Details → Android SDK Build-Tools 33.0.1"
+    echo "Or via Android Studio: Tools -> SDK Manager -> SDK Tools -> Show Package Details -> Android SDK Build-Tools 34.0.0"
 fi
 
 # Clean previous builds
