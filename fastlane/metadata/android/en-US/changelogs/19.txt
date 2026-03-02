@@ -1,0 +1,4 @@
+Version 0.8.4
+
+- Fixed build compatibility with Java/JDK 21
+- Updated Android/Kotlin build tooling for stable builds on newer JDKs
