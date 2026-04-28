@@ -242,5 +242,26 @@ class BackupPreferencesTest {
         // No charging requirement (allows backups anytime)
         assertThat(BackupPreferences.requiresCharging(context)).isFalse()
     }
+
+    @Test
+    fun `requiresTag can toggle between true and false`() {
+        // Given: Initial state is false
+        assertThat(BackupPreferences.requiresTag(context)).isFalse()
+
+        // When: Setting to true
+        BackupPreferences.setAddTag(context, true)
+        assertThat(BackupPreferences.requiresTag(context)).isTrue()
+
+        // And: Setting back to false
+        BackupPreferences.setAddTag(context, false)
+        assertThat(BackupPreferences.requiresTag(context)).isFalse()
+
+        // And: Setting to true again
+        BackupPreferences.setAddTag(context, true)
+
+        // Then: Final state is true
+        assertThat(BackupPreferences.requiresTag(context)).isTrue()
+    }
+
 }
 
