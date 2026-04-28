@@ -86,12 +86,18 @@ class SettingsBackupRulesFragment : Fragment() {
 
         // Initialize checkbox states
         binding.checkboxRequireCharging.isChecked = BackupPreferences.requiresCharging(context)
+        binding.checkboxTagSnapshot.isChecked = BackupPreferences.requiresTag(context)
         binding.checkboxAllowCellular.isChecked = BackupPreferences.allowsCellular(context)
 
         // Handle checkbox changes for require charging
         binding.checkboxRequireCharging.setOnCheckedChangeListener { _, isChecked ->
             BackupPreferences.setRequiresCharging(context, isChecked)
             BackupService.reschedule(context)
+        }
+
+        // Handle checkbox changes for auto-tags
+        binding.checkboxTagSnapshot.setOnCheckedChangeListener { _, isChecked ->
+            BackupPreferences.setAddTag(context, isChecked)
         }
 
         // Handle checkbox changes for allow cellular

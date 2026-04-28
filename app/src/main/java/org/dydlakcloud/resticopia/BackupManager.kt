@@ -264,8 +264,12 @@ class BackupManager private constructor(context: Context) {
 
         val beforeBackup = ZonedDateTime.now()
 
+        val tagScheduled = scheduled.takeIf { BackupPreferences.requiresTag(context) }
+
         resticRepo.backup(
             listOf(folder.path),
+            folder.tags,
+            tagScheduled,
             { progress ->
                 val activeBackupProgress = activeBackupLiveData.value!!.progress(progress)
                 activeBackupLiveData.postValue(activeBackupProgress)

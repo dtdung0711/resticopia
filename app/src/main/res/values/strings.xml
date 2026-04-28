@@ -5,6 +5,7 @@
     <string name="folder_icon_description">Folder icon</string>
     <string name="text_repos">Repositories</string>
     <string name="text_repository">Repository</string>
+    <string name="text_tags">Tags</string>
     <string name="text_settings">Settings</string>
     <string name="settings_network">Network</string>
     <string name="settings_notifications">Notifications</string>
@@ -16,7 +17,10 @@
     <string name="buy_me_coffee">Buy me a coffee</string>
     <string name="text_snapshots">Snapshots</string>
     <string name="text_snapshot">Snapshot</string>
-    <string name="text_files">Files</string>
+    <string name="text_snapshot_details">%s, tags: %s</string>
+    <string name="text_snapshot_tags">tags: %s</string>
+    <string name="text_files">Files: …</string>
+    <string name="text_files_with_count">Files: %d</string>
     <string name="text_schedule">Schedule</string>
     <string name="text_retain">Retain</string>
     <string name="text_saving">Saving…</string>
@@ -145,7 +149,9 @@
     <string name="action_save">Save</string>
     <string name="settings_backup_constraints_title">Backup Constraints</string>
     <string name="settings_backup_require_charging">Require charging for scheduled backups</string>
+    <string name="settings_tag_backup">Tag manual and scheduled backups</string>
     <string name="settings_backup_require_charging_description">Backups will only run when device is connected to power</string>
+    <string name="settings_backup_tag_description">Backups will be tagged as \'manual\' when run manually, or \'scheduled\' when triggered by a schedule.</string>
     <string name="settings_backup_allow_cellular">Allow backups over cellular data</string>
     <string name="settings_backup_allow_cellular_description">When disabled, backups will only run on WiFi</string>
     <string name="settings_view_queued_backups">View Queued Backups</string>

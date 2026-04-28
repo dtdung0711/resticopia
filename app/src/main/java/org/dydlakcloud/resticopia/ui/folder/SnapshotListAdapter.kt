@@ -40,7 +40,11 @@ class SnapshotListAdapter(
 
         // Set date and repo name
         val formattedDate = Formatters.dateTimeDetailed(snapshot.time)
-        detailsView.text = "$formattedDate $repoName"
+        if(snapshot.tags.isNotEmpty()) {
+            detailsView.text = context.getString(R.string.text_snapshot_details, "$formattedDate $repoName", snapshot.tags.joinToString(", "))
+        } else {
+            detailsView.text = "$formattedDate $repoName"
+        }
 
         return view
     }

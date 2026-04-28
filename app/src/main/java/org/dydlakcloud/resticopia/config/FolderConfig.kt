@@ -17,7 +17,8 @@ data class FolderConfig(
     val schedule: String,
     val keepLast: Int? = null,
     val keepWithin: @Serializable(with = DurationSerializer::class) Duration? = null,
-    val history: List<BackupHistoryEntry> = emptyList()
+    val history: List<BackupHistoryEntry> = emptyList(),
+    val tags: List<String> = emptyList()
 ) {
     fun repo(config: Config): RepoConfig? = config.repos.find { it.base.id == repoId }
 

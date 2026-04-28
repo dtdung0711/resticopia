@@ -190,7 +190,8 @@ object TestFixtures {
         hostname: String = "test-device",
         paths: List<File> = listOf(File("/storage/emulated/0/Documents")),
         tree: String = "tree123abc456def",
-        parent: ResticSnapshotId? = null
+        parent: ResticSnapshotId? = null,
+        tags: List<String> = listOf("tag1", "tag2")
     ): ResticSnapshot {
         return ResticSnapshot(
             id = ResticSnapshotId(id),
@@ -198,7 +199,8 @@ object TestFixtures {
             hostname = hostname,
             paths = paths,
             tree = tree,
-            parent = parent
+            parent = parent,
+            tags = tags
         )
     }
     

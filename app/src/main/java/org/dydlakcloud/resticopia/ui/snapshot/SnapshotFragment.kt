@@ -91,38 +91,44 @@ class SnapshotFragment : Fragment() {
                         binding.textHostnamePath.text = "${snapshot.hostname} ${snapshotRootPath.path}"
                         binding.textTime.text = timeString
 
+                        if(snapshot.tags.isNotEmpty()) {
+                            binding.textTags.text = resources.getString(R.string.text_snapshot_tags, snapshot.tags.joinToString(", "))
+                        } else {
+                            binding.textTags.visibility = GONE
+                        }
+
                         // Setup Download All button
                         setupDownloadAllButton()
 
                         resticRepo.ls(snapshotId).handle { lsResult, throwable ->
-                            requireActivity().runOnUiThread {
-                                if (lsResult != null) {
-                                    val (_, files) = lsResult
-                                    binding.skeletonSnapshotFiles.visibility = GONE
+                            if (lsResult != null) {
+                                val (_, files) = lsResult
+                                val filesArrayList = ArrayList(files.filter {
+                                    it.path.startsWith(snapshotRootPath) && it.path.relativeTo(
+                                        snapshotRootPath
+                                    ).path.isNotEmpty() && it.type != "dir" // Exclude directories, show only files
+                                })
 
+                                requireActivity().runOnUiThread {
+                                    binding.skeletonSnapshotFiles.visibility = GONE
+                                    binding.textFiles.text = resources.getString(R.string.text_files_with_count, filesArrayList.size)
                                     binding.listFilesSnapshot.adapter = SnapshotFilesListAdapter(
-                                        requireContext(),
-                                        ArrayList(
-                                            files.filter {
-                                                it.path.startsWith(snapshotRootPath) &&
-                                                        it.path.relativeTo(snapshotRootPath).path.isNotEmpty() &&
-                                                        it.type != "dir" // Exclude directories, show only files
-                                            }
-                                        ),
-                                        resticRepo,
-                                        snapshotId,
-                                        snapshotRootPath,
-                                        binding.progressDl
-                                    )
+                                            requireContext(),
+                                            filesArrayList,
+                                            resticRepo,
+                                            snapshotId,
+                                            snapshotRootPath,
+                                            binding.progressDl)
 
                                     binding.listFilesSnapshot.onItemClickListener =
                                         AdapterView.OnItemClickListener { _, _, _, _ ->
-                                            (binding.listFilesSnapshot.adapter as SnapshotFilesListAdapter)
-                                                .triggerSort(binding.listFilesSnapshot)
+                                            (binding.listFilesSnapshot.adapter as SnapshotFilesListAdapter).triggerSort(
+                                                    binding.listFilesSnapshot
+                                                )
                                         }
-                                } else {
-                                    throwable?.printStackTrace()
                                 }
+                            } else {
+                                throwable?.printStackTrace()
                             }
                         }
                     } else {
