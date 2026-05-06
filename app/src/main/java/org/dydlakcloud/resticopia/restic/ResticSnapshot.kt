@@ -14,5 +14,5 @@ data class ResticSnapshot(
     val paths: List<@Serializable(with = FileSerializer::class) File>,
     val hostname: String,
     val id: ResticSnapshotId,
-    val tags: List<String>
+    val tags: List<String> = emptyList()
 )

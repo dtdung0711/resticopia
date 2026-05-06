@@ -35,4 +35,18 @@ class ResticSnapshotTest {
         assert(resticSnapshot.tags.contains("tag1"))
         assert(resticSnapshot.tags.contains("tag2"))
     }
+
+    @Test
+    fun verify_default_tags() {
+        resticSnapshot = ResticSnapshot(
+            time = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
+            parent = null,
+            tree = "tree-id",
+            paths = listOf(mokkFile),
+            hostname = "hostname",
+            id = ResticSnapshotId("snapshot-id")
+        )
+
+        assertEquals(0, resticSnapshot.tags.size)
+    }
 }
