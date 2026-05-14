@@ -53,6 +53,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_hostname_path" />
 
+        <!-- Line 4: Tags -->
+        <TextView
+            android:id="@+id/text_tags"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.App.CaptionReg"
+            android:textAlignment="center"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_time" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Download All Button -->

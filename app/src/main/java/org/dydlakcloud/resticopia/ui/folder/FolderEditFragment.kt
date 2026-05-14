@@ -117,6 +117,7 @@ class FolderEditFragment : Fragment() {
                 if (hours == -1) "Always" else Formatters.durationDaysHours(Duration.ofHours(hours.toLong()))
             }
             binding.spinnerRetainWithin.setText(retainText, false)
+            binding.editTags.setText(folder.tags.joinToString(", "))
         }
 
         return root
@@ -137,6 +138,7 @@ class FolderEditFragment : Fragment() {
                 val path = binding.editFolder.text.toString()
                 val schedule = binding.spinnerSchedule.text.toString()
                 val retainText = binding.spinnerRetainWithin.text.toString()
+                val tags = binding.editTags.text.toString().split(",").map { it.trim() }.filter { it.isNotEmpty() }
                 val retainIndex = retainProfiles.map { hours ->
                     if (hours == -1) "Always" else Formatters.durationDaysHours(Duration.ofHours(hours.toLong()))
                 }.indexOf(retainText)
@@ -158,7 +160,8 @@ class FolderEditFragment : Fragment() {
                         schedule,
                         prevFolder?.keepLast,
                         keepWithin,
-                        prevFolder?.history ?: emptyList()
+                        prevFolder?.history ?: emptyList(),
+                        tags
                     )
 
                     backupManager.configure { config ->

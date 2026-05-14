@@ -127,6 +127,8 @@ abstract class ResticRepo(
 
     fun backup(
         paths: List<File>,
+        tags: List<String>,
+        scheduled: Boolean?,
         onProgress: (ResticBackupProgress) -> Unit,
         cancel: CompletableFuture<Unit>? = null,
         ignorePatterns: String? = null
@@ -159,6 +161,23 @@ abstract class ResticRepo(
         if (excludeFile != null) {
             backupArgs.add("--exclude-file")
             backupArgs.add(excludeFile.absolutePath)
+        }
+
+        if (tags.isNotEmpty()) {
+            for(tag in tags) {
+                backupArgs.add("--tag")
+                backupArgs.add(tag)
+            }
+        }
+
+        scheduled?.let {
+            if (it) {
+                backupArgs.add("--tag")
+                backupArgs.add("scheduled")
+            } else {
+                backupArgs.add("--tag")
+                backupArgs.add("manual")
+            }
         }
         
         // Add paths to backup

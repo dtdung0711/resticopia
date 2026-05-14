@@ -10,6 +10,7 @@ import android.content.SharedPreferences
 object BackupPreferences {
     private const val PREFS_NAME = "MyPrefs"
     private const val KEY_REQUIRE_CHARGING = "backup_require_charging"
+    private const val KEY_ADD_TAGS = "backup_add_tags"
     private const val KEY_ALLOW_CELLULAR = "backup_allow_cellular"
 
     /**
@@ -37,6 +38,27 @@ object BackupPreferences {
      */
     fun setRequiresCharging(context: Context, required: Boolean) {
         getPrefs(context).edit().putBoolean(KEY_REQUIRE_CHARGING, required).apply()
+    }
+
+
+    /**
+     * Checks if manual and scheduled backups will be tagged
+     *
+     * @param context The application context
+     * @return true if backups require tag, false otherwise (default: false)
+     */
+    fun requiresTag(context: Context): Boolean {
+        return getPrefs(context).getBoolean(KEY_ADD_TAGS, false)
+    }
+
+    /**
+     * Sets whether manual or scheduled backups should be tagged
+     *
+     * @param context The application context
+     * @param required true to require charging, false otherwise
+     */
+    fun setAddTag(context: Context, required: Boolean) {
+        getPrefs(context).edit().putBoolean(KEY_ADD_TAGS, required).apply()
     }
 
     /**
