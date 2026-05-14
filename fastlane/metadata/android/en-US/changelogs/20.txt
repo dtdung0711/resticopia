@@ -1,0 +1,4 @@
+Version 0.8.5
+
+- Improved device hostname resolution by adding fallbacks to derive a meaningful name when Bluetooth permission or device name is unavailable
+- Ability to add custom tags to backups

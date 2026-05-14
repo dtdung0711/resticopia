@@ -1,0 +1,4 @@
+Wersja 0.8.5
+
+- Ulepszono mechanizm ustalania nazwy hosta urządzenia poprzez dodanie mechanizmów awaryjnych do wyznaczania sensownej nazwy, gdy uprawnienie Bluetooth lub nazwa urządzenia są niedostępne
+- Dodano możliwość dodawania własnych tagów do kopii zapasowych
