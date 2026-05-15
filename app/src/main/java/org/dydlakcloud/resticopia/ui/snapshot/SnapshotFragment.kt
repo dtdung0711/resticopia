@@ -123,6 +123,7 @@ class SnapshotFragment : Fragment() {
                                             binding.progressDl)
                                     adapter.triggerDefaultSort()
                                     binding.listFilesSnapshot.adapter = adapter
+                                    binding.imageButtonSort.visibility = VISIBLE
                                     binding.imageButtonSort.setOnClickListener { view -> showSortMenu(adapter, view) }
                                 }
                             } else {
