@@ -71,7 +71,8 @@ class RepoFragment : Fragment() {
                             requireContext(),
                             snapshots
                         )
-                        
+                        binding.textSnapshots.text = resources.getString(R.string.text_snapshots_with_counts, snapshots.size)
+
                         // Hide divider if there's only one snapshot
                         if (snapshots.size <= 1) {
                             binding.listRepoSnapshots.divider = null
