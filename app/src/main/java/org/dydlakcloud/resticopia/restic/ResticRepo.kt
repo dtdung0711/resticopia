@@ -1,6 +1,5 @@
 package org.dydlakcloud.resticopia.restic
 
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.time.Duration
@@ -115,7 +114,7 @@ abstract class ResticRepo(
 
     fun ls(snapshotId: ResticSnapshotId): CompletableFuture<Pair<ResticSnapshot, List<ResticFile>>> =
         restic(
-            listOf("--json", "ls", snapshotId.id)
+            listOf("--json", "ls", snapshotId.id, "--long")
         ).thenApply { (out, _) ->
             val snapshotJson = out[0]
             val filesJson = out.drop(1)
