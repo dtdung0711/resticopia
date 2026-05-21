@@ -45,6 +45,7 @@ class ResticRepoTest {
         assertNotNull(resticRepo)
     }
 
+    @Test
     fun `verify restic-ls() fun for -- long argument`() {
         val resticSnapshotId = ResticSnapshotId("snapshot-id")
 
@@ -90,6 +91,37 @@ class ResticRepoTest {
                   """.trimIndent(),
         )
 
+        every {
+            restic.restic(listOf("--json", "ls", "snapshot-id", "--long"), any(), any(), any(), any(), any())
+        } returns CompletableFuture.completedFuture(Pair(mockOutput, emptyList()))
+
+        val files = arrayListOf<ResticFile>()
+        resticRepo.ls(resticSnapshotId).handle { lsResult, throwable ->
+            assertNotNull(lsResult)
+            assertNull(throwable)
+
+            lsResult?.second?.let {
+                files.addAll(it)
+            }
+        }.join()
+        assertEquals(12, files.size)
+
+        assertEquals(files[0].name, 0L, files[0].size)
+        assertEquals(files[0].name, "dir", files[0].type)
+
+        assertEquals("PXL_20260209_103940855.jpg", files[6].name)
+        assertEquals(files[6].name, 2110429L, files[6].size)
+        assertEquals("2.01 MiB", files[6].humanReadableSize)
+
+        assertEquals("PXL_20260512_144011149.jpg", files[7].name)
+        assertEquals(files[7].name, 2103546L, files[7].size)
+        assertEquals("2.01 MiB", files[7].humanReadableSize)
+
+        assertEquals("Cloud_Edited_01_05_2026_13_19_47_birds-perched-animals-feathers-4580620.jpg", files[9].name)
+        assertEquals(files[9].name, 426385L, files[9].size)
+        assertEquals("416.39 KiB", files[9].humanReadableSize)
+    }
+
     @Test
     fun `validate forget`() {
         val sampleResticJson = """
@@ -124,33 +156,33 @@ class ResticRepoTest {
         ]
         """.trimIndent()
         every {
-            restic.restic(listOf("--json", "ls", "snapshot-id", "--long"), any(), any(), any(), any(), any())
-        } returns CompletableFuture.completedFuture(Pair(mockOutput, emptyList()))
-
-        val files = arrayListOf<ResticFile>()
-        resticRepo.ls(resticSnapshotId).handle { lsResult, throwable ->
-            assertNotNull(lsResult)
-            assertNull(throwable)
-
-            lsResult?.second?.let {
-                files.addAll(it)
-            }
+            restic.restic(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns CompletableFuture.completedFuture(Pair(listOf(sampleResticJson), emptyList()))
+        val paths = listOf(file0, file1)
+        var forgetResult: List<ResticSnapshot>? = null
+        var forgetException: Throwable? = null
+        resticRepo.forget(paths, 1, Duration.ZERO, true).handle { result, exception ->
+            forgetResult = result
+            forgetException = exception
         }.join()
-        assertEquals(12, files.size)
+        assertNotNull(forgetResult)
+        assertEquals(1, forgetResult?.size)
+        assertNotNull(forgetResult?.get(0))
+        val resticSnapshot = forgetResult?.get(0)!!
+        assertEquals("b7ec83c2e1b94d76a213e45fbc89d0123e456789abcdef0123456789abcdef34", resticSnapshot.tree)
+        assertEquals("9f8e7d6c", resticSnapshot.id.id)
+        assertEquals("pixel-7-pro", resticSnapshot.hostname)
+        assertEquals(0, resticSnapshot.tags.size)
+        assertEquals(1, resticSnapshot.paths.size)
+        assertEquals("/home/user/projects", resticSnapshot.paths[0].absolutePath)
 
-        assertEquals(files[0].name, 0L, files[0].size)
-        assertEquals(files[0].name, "dir", files[0].type)
-
-        assertEquals("PXL_20260209_103940855.jpg", files[6].name)
-        assertEquals(files[6].name, 2110429L, files[6].size)
-        assertEquals("2.01 MiB", files[6].humanReadableSize)
-
-        assertEquals("PXL_20260512_144011149.jpg", files[7].name)
-        assertEquals(files[7].name, 2103546L, files[7].size)
-        assertEquals("2.01 MiB", files[7].humanReadableSize)
-
-        assertEquals("Cloud_Edited_01_05_2026_13_19_47_birds-perched-animals-feathers-4580620.jpg", files[9].name)
-        assertEquals(files[9].name, 426385L, files[9].size)
-        assertEquals("416.39 KiB", files[9].humanReadableSize)
+        assertNull(forgetException)
     }
 }
