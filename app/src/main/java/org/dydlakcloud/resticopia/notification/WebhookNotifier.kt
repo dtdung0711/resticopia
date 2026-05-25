@@ -1,5 +1,7 @@
 package org.dydlakcloud.resticopia.notification
 
+import org.dydlakcloud.resticopia.restic.ResticBackupProgress
+import org.dydlakcloud.resticopia.restic.ResticBackupSummary
 import java.io.BufferedOutputStream
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
@@ -20,7 +22,8 @@ object WebhookNotifier {
         folderName: String,
         errorMessage: String? = null,
         bearerToken: String? = null,
-        duration: Duration? = null
+        duration: Duration? = null,
+        backupSummary: ResticBackupSummary? = null
     ): CompletableFuture<Unit> {
         return CompletableFuture.supplyAsync {
             if (webhookUrl.isNullOrBlank()) {
@@ -35,7 +38,7 @@ object WebhookNotifier {
             val durationString = duration?.let { "${it.seconds}s" }
             val errorString = if (!isSuccess) errorMessage else null
 
-                    val processedUrl = webhookUrl.trim()
+            val processedUrl = webhookUrl.trim()
                 .replace("{success}", isSuccess.toString())
                 .replace("{error}", errorString ?: "")
                 .replace("{duration}", durationString ?: "")
@@ -43,8 +46,7 @@ object WebhookNotifier {
             println("WebhookNotifier: Sending to URL: $processedUrl")
 
             try {
-                val url = URL(processedUrl)
-                val connection = url.openConnection() as HttpURLConnection
+                val connection = getConnection(processedUrl)
 
                 try {
                     connection.requestMethod = "POST"
@@ -67,9 +69,26 @@ object WebhookNotifier {
                         append("\"device\":\"${device.replace("\"", "\\\"")}\",")
                         append("\"folderName\":\"${folderName.replace("\"", "\\\"")}\",")
                         append("\"folderPath\":\"${folderPath.replace("\"", "\\\"")}\"")
+                        if(backupSummary != null) {
+                            append(",\"dataAdded\":${backupSummary.data_added},")
+                            append("\"dataAddedPacked\":${backupSummary.data_added_packed},")
+                            append("\"dataBlobs\":${backupSummary.data_blobs},")
+                            append("\"treeBlobs\":${backupSummary.tree_blobs},")
+                            append("\"dirsUnmodified\":${backupSummary.dirs_unmodified},")
+                            append("\"dirsChanged\":${backupSummary.dirs_changed},")
+                            append("\"dirsNew\":${backupSummary.dirs_new},")
+                            append("\"filesUnmodified\":${backupSummary.files_unmodified},")
+                            append("\"filesChanged\":${backupSummary.files_changed},")
+                            append("\"filesNew\":${backupSummary.files_new},")
+                            append("\"snapshotId\": \"${backupSummary.snapshot_id}\",")
+                            append("\"totalBytesProcessed\":\"${ResticBackupProgress.formatBytes(backupSummary.total_bytes_processed)}\",")
+                            append("\"totalFilesProcessed\":${backupSummary.total_files_processed},")
+                            append("\"totalDuration\":${backupSummary.total_duration}")
+                        }
                         append("}")
                     }
 
+                    println("WebhookNotifier: JSON Body: $jsonBody")
                     BufferedOutputStream(connection.outputStream).use { outputStream ->
                         OutputStreamWriter(outputStream, StandardCharsets.UTF_8).use { writer ->
                             writer.write(jsonBody)
@@ -91,5 +110,11 @@ object WebhookNotifier {
                 println("WebhookNotifier: Error sending webhook: ${e.message}")
             }
         }
+    }
+
+    internal fun getConnection(url: String): HttpURLConnection {
+        val url = URL(url)
+        val connection = url.openConnection() as HttpURLConnection
+        return connection
     }
 }
