@@ -4,17 +4,15 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockkObject
-import io.mockk.verify
 import org.dydlakcloud.resticopia.restic.ResticBackupSummary
 import org.dydlakcloud.resticopia.restic.ResticSnapshotId
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import java.io.ByteArrayOutputStream
-import java.io.OutputStream
 import java.net.HttpURLConnection
-import java.sql.Connection
 import java.time.Duration
+
 
 class WebhookNotifierTest {
 
