@@ -348,7 +348,7 @@ class BackupManager private constructor(context: Context) {
 
             fun removeOldBackups(callback: () -> Unit) {
                 if (removeOld && throwable == null && (folder.keepLast != null || folder.keepWithin != null)) {
-                    resticRepo.forget(
+                    resticRepo.forget(listOf(folder.path),
                         folder.keepLast,
                         folder.keepWithin,
                         prune = true

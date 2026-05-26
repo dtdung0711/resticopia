@@ -59,7 +59,7 @@ class RepoFragment : Fragment() {
             binding.textRepoUrl.text = UrlUtils.sanitizeRepoUrl(resticRepo)
 
             backupManager.observeConfig(viewLifecycleOwner) { _ ->
-                resticRepo.snapshots(latest = 100).handle { snapshots, throwable ->
+                resticRepo.snapshots(hostname = resticRepo.restic.hostname, latest = 100).handle { snapshots, throwable ->
                     requireActivity().runOnUiThread {
                         binding.skeletonRepoSnapshots.visibility = GONE
 
