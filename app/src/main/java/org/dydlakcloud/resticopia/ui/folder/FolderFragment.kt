@@ -98,7 +98,7 @@ class FolderFragment : Fragment() {
                     if (lastSuccessfulBackup == null) ""
                     else "Last Backup on ${Formatters.dateTimeDetailed(lastSuccessfulBackup.timestamp)}"
 
-                resticRepo.snapshots(hostname = resticRepo.restic.hostname, latest = 100).handle { snapshots, throwable ->
+                resticRepo.snapshots(latest = 100).handle { snapshots, throwable ->
                     requireActivity().runOnUiThread {
                         binding.skeletonFolderSnapshots.visibility = GONE
 
