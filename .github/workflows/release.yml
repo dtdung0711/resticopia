@@ -31,6 +31,7 @@ jobs:
       - name: Build Native Binaries
         run: |
           docker compose -f docker-compose-build.yml up --build --abort-on-container-exit
+          sudo chown -R $USER:$USER .
       - name: Keystore
         run: |
           [ "${{ secrets.RELEASE_STORE_BASE64}}" == "" ] || echo "${{ secrets.RELEASE_STORE_BASE64}}" | base64 -d > keystore.jks
