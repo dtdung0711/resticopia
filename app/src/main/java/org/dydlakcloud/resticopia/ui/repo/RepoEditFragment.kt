@@ -424,12 +424,12 @@ class RepoEditFragment : Fragment() {
             }
             RepoType.Rclone -> {
                 val selectedRemoteName = binding.editRepoRcloneParameters.spinnerRcloneRemote.text.toString()
-                val selectedRemote = rcloneRemotes.find { it.name == selectedRemoteName }
+                val selectedRemote = rcloneRemotes.find { it.name == selectedRemoteName || it.toString() == selectedRemoteName }
                 val pathText = binding.editRepoRcloneParameters.editRclonePath.text.toString()
                 RepoConfig(
                     baseConfig,
                     RcloneRepoParams(
-                        rcloneRemote = selectedRemote?.name ?: "",
+                        rcloneRemote = selectedRemote?.name ?: selectedRemoteName.substringBefore(" ("),
                         rclonePath = pathText.ifEmpty { "" } // Empty string means root directory
                     )
                 )

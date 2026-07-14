@@ -26,7 +26,8 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Keystore
-        run: echo "${{ secrets.RELEASE_STORE_BASE64}}" | base64 -d > keystore.jks
+        run: |
+          [ "${{ secrets.RELEASE_STORE_BASE64}}" == "" ] || echo "${{ secrets.RELEASE_STORE_BASE64}}" | base64 -d > keystore.jks
       - name: Build with Gradle
         env:
           CI_VERSION: ${{ github.ref }}
@@ -35,9 +36,13 @@ jobs:
           RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
         run: |
           export GIT_COMMIT_COUNT="$(git rev-list --all --count)"
-          export RELEASE_STORE_FILE="$(readlink -f keystore.jks)"
+          export RELEASE_STORE_FILE="$(readlink -f keystore.jks 2>/dev/null || echo '')"
           echo "GIT_COMMIT_COUNT: $GIT_COMMIT_COUNT"
-          ./gradlew assembleRelease
+          if [ -e keystore.jks ]; then
+            ./gradlew assembleRelease
+          else
+            ./gradlew assembleDebug
+          fi
           mv app/build/outputs/apk/*/*.apk .
       - uses: actions/upload-artifact@v4
         with:
