@@ -51,6 +51,17 @@ This is an **unofficial** application and is not developed or endorsed by the of
 - All modifications and additions are also licensed under GNU General Public License v2.0
 - See git commit history for detailed changes
 
+#### Các Cải tiến & Sửa lỗi Chính trong Bản Fork này
+- **Cải tiến Giao diện & Trải nghiệm Người dùng (UX & UI)**:
+  - **Sửa lỗi Chọn Remote Rclone**: Khắc phục lỗi khi chọn Remote Rclone có chứa định dạng loại trong ngoặc đơn (ví dụ: `remote (s3)`) bị lưu thành chuỗi rỗng `""` gây mất kết nối. Bộ phân tích hiện tại sẽ tự động tách lấy tên Remote gốc.
+  - **Loại bỏ Bộ lọc Hostname**: Loại bỏ bộ lọc tên thiết bị mặc định khi hiển thị danh sách bản sao lưu (snapshots) ở cả màn hình kho lưu trữ và màn hình thư mục. Người dùng hiện có thể xem và khôi phục các bản sao lưu từ bất kỳ thiết bị nào mà không cần cấu hình hostname thủ công.
+- **Tối ưu hóa Quy trình CI/CD & Build (GitHub Actions)**:
+  - **Tự động Biên dịch Native Binaries**: Tích hợp tự động biên dịch các file nhị phân gốc (PRoot, Restic, Rclone) thông qua Docker Compose ngay trong các workflow của GitHub Actions, giúp tránh lỗi runtime "không tìm thấy tệp tin" trên file APK đầu ra.
+  - **Sửa lỗi Phân quyền & VCS**: Bổ sung cờ `-buildvcs=false` và cấu hình `safe.directory` cho Git bên trong Docker container để sửa các lỗi phân quyền sở hữu Git khi biên dịch.
+  - **Khôi phục Quyền sở hữu trên Host**: Khắc phục lỗi phân quyền ghi bằng cách trả lại quyền sở hữu (`chown`) cho user trên máy ảo đối với tất cả các thư mục được sinh ra từ Docker.
+  - **Cơ chế Tự động Chuyển đổi Khóa Ký (Keyless Build Fallback)**: Tự động chuyển sang build bản APK debug (`assembleDebug`) nếu các secrets cấu hình khóa ký chính thức không tồn tại, giúp tiến trình build không bị lỗi.
+  - **Cấp quyền ghi cho Release Assets**: Khai báo rõ ràng quyền `contents: write` trong workflow phát hành để cho phép đẩy các tệp APK trực tiếp lên mục GitHub Releases.
+
 ### Original Work
 - **Original Project**: [restic-android](https://github.com/lhns/restic-android) by [lhns](https://github.com/lhns)
 - **Original License**: GNU General Public License v2.0
